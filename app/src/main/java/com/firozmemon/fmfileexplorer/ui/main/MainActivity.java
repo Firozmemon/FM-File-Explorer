@@ -135,13 +135,21 @@ public class MainActivity extends AppCompatActivity implements MainActivityAdapt
     @Override
     public void onBackPressed() {
         List<String> storageDirs = Arrays.asList(StorageUtil.getStorageDirectories(MainActivity.this));
-        if (!CURRENT_DIR.equalsIgnoreCase(ROOT_DIR) && !storageDirs.contains(CURRENT_DIR)) {
-            presenter.loadParentModelData(CURRENT_DIR);
-        } else {
+        if (CURRENT_DIR.equalsIgnoreCase(System.getenv("EXTERNAL_STORAGE")) ||
+                CURRENT_DIR.equalsIgnoreCase(ROOT_DIR) ||
+                storageDirs.contains(CURRENT_DIR)) {
             super.onBackPressed();
+        } else {
+            presenter.loadParentModelData(CURRENT_DIR);
         }
     }
 
+    /**
+     * Get file extension from string passed as param
+     *
+     * @param url
+     * @return file extension
+     */
     private String fileExt(String url) {
         if (url.indexOf("?") > -1) {
             url = url.substring(0, url.indexOf("?"));

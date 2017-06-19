@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 public class StorageUtil {
 
-    private static final Pattern DIR_SEPORATOR = Pattern.compile("/");
+    private static final Pattern DIR_SEPARATOR = Pattern.compile("/");
 
     /**
      * Returns all available SD-Cards in the system (include emulated)
@@ -62,7 +62,7 @@ public class StorageUtil {
                 rawUserId = "";
             } else {
                 final String path = Environment.getExternalStorageDirectory().getAbsolutePath();
-                final String[] folders = DIR_SEPORATOR.split(path);
+                final String[] folders = DIR_SEPARATOR.split(path);
                 final String lastFolder = folders[folders.length - 1];
                 boolean isDigit = false;
                 try {
