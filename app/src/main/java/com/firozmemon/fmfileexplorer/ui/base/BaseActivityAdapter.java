@@ -1,4 +1,4 @@
-package com.firozmemon.fmfileexplorer.ui.main;
+package com.firozmemon.fmfileexplorer.ui.base;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -20,14 +20,14 @@ import butterknife.ButterKnife;
  * Created by firoz on 11/6/17.
  */
 
-public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapter.MyViewHolder> {
+public class BaseActivityAdapter extends RecyclerView.Adapter<BaseActivityAdapter.MyViewHolder> {
 
     private final Context context;
     private final LayoutInflater inflater;
     private List<FileModel> fileModelList;
     AdapterItemClickListener itemClickListener;
 
-    public MainActivityAdapter(Context context, List<FileModel> fileModelList) {
+    public BaseActivityAdapter(Context context, List<FileModel> fileModelList) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fileModelList = fileModelList;
@@ -35,7 +35,7 @@ public class MainActivityAdapter extends RecyclerView.Adapter<MainActivityAdapte
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = inflater.inflate(R.layout.adapter_main, parent, false);
+        View view = inflater.inflate(R.layout.adapter_base, parent, false);
         MyViewHolder viewHolder = new MyViewHolder(view);
         return viewHolder;
     }

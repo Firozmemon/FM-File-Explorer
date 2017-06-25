@@ -1,4 +1,4 @@
-package com.firozmemon.fmfileexplorer.ui.main;
+package com.firozmemon.fmfileexplorer.ui.base;
 
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
@@ -22,15 +22,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by firoz on 11/6/17.
  */
 
-public class MainActivityPresenter {
+public class BaseActivityPresenter {
 
-    private MainActivityView view;
+    private BaseActivityView view;
     private Scheduler mainScheduler;
     private StorageUtilHelper storageUtilHelper;
 
     CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public MainActivityPresenter(MainActivityView view, StorageUtilHelper storageUtilHelper, Scheduler scheduler) {
+    public BaseActivityPresenter(BaseActivityView view, StorageUtilHelper storageUtilHelper, Scheduler scheduler) {
         this.view = view;
         this.storageUtilHelper = storageUtilHelper;
         mainScheduler = scheduler;
@@ -220,6 +220,7 @@ public class MainActivityPresenter {
 
     /**
      * Get the File Size in human readable format
+     *
      * @param myFile
      * @return String containing file size
      */
@@ -243,6 +244,7 @@ public class MainActivityPresenter {
 
     /**
      * Gets the file size of specific directory/file
+     *
      * @param f
      * @return size of file/directory in bytes
      */

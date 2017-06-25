@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:id="@+id/coordinatorLayout"
     android:layout_height="match_parent"
-    tools:context="com.firozmemon.fmfileexplorer.BaseActivity">
+    tools:context="com.firozmemon.fmfileexplorer.ui.base.BaseActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
