@@ -29,13 +29,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by firoz on 25/6/17.
  */
 
-public class DefaultFragment extends BaseFragment {
+public class StorageFragment extends BaseFragment {
 
     private String CURRENT_DIR = "";
     BaseActivityPresenter presenter;
+    private final static String BUNDLE_KEY = "path";
 
-    public static DefaultFragment getInstance() {
-        return new DefaultFragment();
+    public static StorageFragment getInstance(String path) {
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_KEY, path);
+
+        StorageFragment fragment = new StorageFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
@@ -49,15 +55,8 @@ public class DefaultFragment extends BaseFragment {
     @Override
     public void initialSetup() {
         // Setting CURRENT DIR path
-        CURRENT_DIR = System.getenv("EXTERNAL_STORAGE");
-        if (CURRENT_DIR == null) {
-            try {
-                CURRENT_DIR = Environment.getExternalStorageDirectory().getCanonicalPath();
-            } catch (IOException e) {
-                e.printStackTrace();
-                CURRENT_DIR = "/"; // If nothing shows up, display root directory (This should never happen)
-            }
-        }
+        CURRENT_DIR = getArguments().getString(BUNDLE_KEY);
+
         CURRENT_DIR_PATH = CURRENT_DIR;
     }
 

@@ -12,11 +12,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.firozmemon.fmfileexplorer.FMApplication;
 import com.firozmemon.fmfileexplorer.R;
 import com.firozmemon.fmfileexplorer.ui.fragments.DefaultFragment;
+import com.firozmemon.fmfileexplorer.ui.fragments.StorageFragment;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +54,10 @@ public class BaseActivity extends AppCompatActivity
     private static final String TAG_DEFAULT = "default";
     private static final String TAG_SD0 = "sd0";
     private static final String TAG_SD1 = "sd1";
+    private static final String TAG_SD2 = "sd2";
+    private static final String TAG_SD3 = "sd3";
+    private static final String TAG_SD4 = "sd4";
+    private static final String TAG_ROOT = "root";
     public static String CURRENT_TAG = TAG_DEFAULT;
 
     private Handler mHandler;
@@ -68,6 +77,7 @@ public class BaseActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+        setupNavigationView();
 
         mHandler = new Handler();
 
@@ -75,6 +85,57 @@ public class BaseActivity extends AppCompatActivity
             navItemIndex = -1;
             CURRENT_TAG = TAG_DEFAULT;
             loadHomeFragment();
+        }
+    }
+
+    private void setupNavigationView() {
+        List<String> storageList = ((FMApplication) getApplication()).getStorageDirectories();
+        // Assuming a device can have max 5 storage paths
+        // FIXME: have dynamic storage options w.r.t device storage availability
+        if(storageList.size() >= 5) {
+            // do nothing, display all 5 storage options
+        } else {
+            int storageCount = storageList.size();
+
+            Menu navMenu = navigationView.getMenu();
+
+            switch (storageCount - 1) {
+                case 0:
+                    navMenu.findItem(R.id.nav_sd0).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd1).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd2).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd3).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd4).setVisible(false);
+                    break;
+                case 1:
+                    navMenu.findItem(R.id.nav_sd0).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd1).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd2).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd3).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd4).setVisible(false);
+                    break;
+                case 2:
+                    navMenu.findItem(R.id.nav_sd0).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd1).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd2).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd3).setVisible(false);
+                    navMenu.findItem(R.id.nav_sd4).setVisible(false);
+                    break;
+                case 3:
+                    navMenu.findItem(R.id.nav_sd0).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd1).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd2).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd3).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd4).setVisible(false);
+                    break;
+                case 4: // this case will never be called :D
+                    navMenu.findItem(R.id.nav_sd0).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd1).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd2).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd3).setVisible(true);
+                    navMenu.findItem(R.id.nav_sd4).setVisible(true);
+                    break;
+            }
         }
     }
 
@@ -86,8 +147,9 @@ public class BaseActivity extends AppCompatActivity
             BaseFragment fragment = (BaseFragment) getFragmentManager().findFragmentByTag(CURRENT_TAG);
             if (fragment == null) {
                 fragment = (BaseFragment) getFragmentManager().findFragmentByTag(TAG_DEFAULT);
-            } else
-                fragment.performBackPressedOperation();
+            }
+
+            fragment.performBackPressedOperation();
         }
     }
 
@@ -97,17 +159,27 @@ public class BaseActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
+        CURRENT_TAG = TAG_DEFAULT;
+        if (id == R.id.nav_sd0) {
             navItemIndex = 0;
-            //CURRENT_TAG = TAG_SD0;
-        } else if (id == R.id.nav_gallery) {
+            CURRENT_TAG = TAG_SD0;
+        } else if (id == R.id.nav_sd1) {
             navItemIndex = 1;
-            //CURRENT_TAG = TAG_SD1;
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+            CURRENT_TAG = TAG_SD1;
+        } else if (id == R.id.nav_sd2) {
+            navItemIndex = 2;
+            CURRENT_TAG = TAG_SD2;
+        } else if (id == R.id.nav_sd3) {
+            navItemIndex = 3;
+            CURRENT_TAG = TAG_SD3;
+        } else if (id == R.id.nav_sd4) {
+            navItemIndex = 4;
+            CURRENT_TAG = TAG_SD4;
+        } else if (id == R.id.nav_root) {
+            navItemIndex = 5;
+            CURRENT_TAG = TAG_ROOT;
+        } else if (id == R.id.nav_apps) {
+            navItemIndex = 6;
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -116,6 +188,7 @@ public class BaseActivity extends AppCompatActivity
 
         drawer.closeDrawer(GravityCompat.START);
 
+        loadHomeFragment();
         return true;
     }
 
@@ -130,11 +203,9 @@ public class BaseActivity extends AppCompatActivity
 
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
-        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+        if (getFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
 
-            // show or hide the fab button
-            //toggleFab();
             return;
         }
 
@@ -160,9 +231,6 @@ public class BaseActivity extends AppCompatActivity
             mHandler.post(mPendingRunnable);
         }
 
-        // show or hide the fab button
-        //toggleFab();
-
         //Closing drawer on item click
         drawer.closeDrawers();
 
@@ -171,32 +239,22 @@ public class BaseActivity extends AppCompatActivity
     }
 
     private Fragment getHomeFragment() {
+        List<String> storageList = ((FMApplication) getApplication()).getStorageDirectories();
         switch (navItemIndex) {
             case 0:
-                // sd0
-                DefaultFragment defaultFragment = new DefaultFragment();
-                return defaultFragment;
-            /*case 1:
-                // sd1
-                PhotosFragment photosFragment = new PhotosFragment();
-                return photosFragment;
-            /*case 2:
-                // movies fragment
-                MoviesFragment moviesFragment = new MoviesFragment();
-                return moviesFragment;
+            case 1:
+            case 2:
             case 3:
-                // notifications fragment
-                NotificationsFragment notificationsFragment = new NotificationsFragment();
-                return notificationsFragment;
-
             case 4:
-                // settings fragment
-                SettingsFragment settingsFragment = new SettingsFragment();
-                return settingsFragment;
-            */
+                // storage path
+                return StorageFragment.getInstance(storageList.get(navItemIndex));
+            case 5:
+                // root path
+                return StorageFragment.getInstance("/");
+
 
             default:
-                return new DefaultFragment();
+                return DefaultFragment.getInstance();
         }
     }
 }
