@@ -1,7 +1,9 @@
-package com.firozmemon.fmfileexplorer.ui.base;
+package com.firozmemon.fmfileexplorer.ui.storage;
 
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
+import com.firozmemon.fmfileexplorer.ui.base.BasePresenter;
+import com.firozmemon.fmfileexplorer.ui.base.BaseView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,25 +24,18 @@ import io.reactivex.schedulers.Schedulers;
  * Created by firoz on 11/6/17.
  */
 
-public class BaseActivityPresenter {
+public class StoragePresenter extends BasePresenter {
 
-    private BaseActivityView view;
-    private Scheduler mainScheduler;
+    private BaseView<FileModel> view;
     private StorageUtilHelper storageUtilHelper;
 
-    CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    public BaseActivityPresenter(BaseActivityView view, StorageUtilHelper storageUtilHelper, Scheduler scheduler) {
+    public StoragePresenter(BaseView<FileModel> view, StorageUtilHelper storageUtilHelper, Scheduler scheduler) {
         this.view = view;
         this.storageUtilHelper = storageUtilHelper;
         mainScheduler = scheduler;
     }
 
-    public void unsubscribe() {
-        compositeDisposable.clear();
-    }
-
-    public void fetchAllStorageDirectories() {
+    public void fetchAllStorageDirectoryFiles() {
         compositeDisposable.add(storageUtilHelper.getStorageDirectories()
                 .subscribeOn(Schedulers.io())
                 .observeOn(mainScheduler)

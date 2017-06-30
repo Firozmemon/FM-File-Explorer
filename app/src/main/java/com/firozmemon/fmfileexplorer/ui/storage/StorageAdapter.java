@@ -1,4 +1,4 @@
-package com.firozmemon.fmfileexplorer.ui.base;
+package com.firozmemon.fmfileexplorer.ui.storage;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.firozmemon.fmfileexplorer.R;
 import com.firozmemon.fmfileexplorer.models.FileModel;
+import com.firozmemon.fmfileexplorer.ui.base.AdapterItemClickListener;
 
 import java.util.List;
 
@@ -20,14 +21,14 @@ import butterknife.ButterKnife;
  * Created by firoz on 11/6/17.
  */
 
-public class BaseActivityAdapter extends RecyclerView.Adapter<BaseActivityAdapter.MyViewHolder> {
+public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.MyViewHolder> {
 
     private final Context context;
     private final LayoutInflater inflater;
     private List<FileModel> fileModelList;
     AdapterItemClickListener itemClickListener;
 
-    public BaseActivityAdapter(Context context, List<FileModel> fileModelList) {
+    public StorageAdapter(Context context, List<FileModel> fileModelList) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         this.fileModelList = fileModelList;
@@ -99,11 +100,5 @@ public class BaseActivityAdapter extends RecyclerView.Adapter<BaseActivityAdapte
 
     public void setItemClickListener(AdapterItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
-    }
-
-    public interface AdapterItemClickListener {
-        void onAdapterItemClick(View view, int position);
-
-        void onAdapterItemLongClick(View view, int position);
     }
 }

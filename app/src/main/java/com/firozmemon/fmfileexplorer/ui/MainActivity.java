@@ -1,4 +1,4 @@
-package com.firozmemon.fmfileexplorer.ui.base;
+package com.firozmemon.fmfileexplorer.ui;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -18,8 +18,10 @@ import android.widget.FrameLayout;
 
 import com.firozmemon.fmfileexplorer.FMApplication;
 import com.firozmemon.fmfileexplorer.R;
-import com.firozmemon.fmfileexplorer.ui.fragments.DefaultFragment;
-import com.firozmemon.fmfileexplorer.ui.fragments.StorageFragment;
+import com.firozmemon.fmfileexplorer.ui.apps.AppFragment;
+import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
+import com.firozmemon.fmfileexplorer.ui.storage.fragments.DefaultFragment;
+import com.firozmemon.fmfileexplorer.ui.storage.fragments.StorageFragment;
 
 import java.util.List;
 
@@ -27,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BaseActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.coordinatorLayout)
@@ -58,6 +60,7 @@ public class BaseActivity extends AppCompatActivity
     private static final String TAG_SD3 = "sd3";
     private static final String TAG_SD4 = "sd4";
     private static final String TAG_ROOT = "root";
+    private static final String TAG_APP = "apps";
     public static String CURRENT_TAG = TAG_DEFAULT;
 
     private Handler mHandler;
@@ -65,7 +68,7 @@ public class BaseActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base);
+        setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
@@ -180,6 +183,7 @@ public class BaseActivity extends AppCompatActivity
             CURRENT_TAG = TAG_ROOT;
         } else if (id == R.id.nav_apps) {
             navItemIndex = 6;
+            CURRENT_TAG = TAG_APP;
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -252,6 +256,9 @@ public class BaseActivity extends AppCompatActivity
                 // root path
                 return StorageFragment.getInstance("/");
 
+            case 6:
+                // apps
+                return AppFragment.getInstance();
 
             default:
                 return DefaultFragment.getInstance();

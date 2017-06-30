@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firozmemon.fmfileexplorer.R;
+import com.firozmemon.fmfileexplorer.ui.storage.StorageAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,14 +21,14 @@ import butterknife.ButterKnife;
  * Created by firoz on 25/6/17.
  */
 
-public abstract class BaseFragment extends Fragment implements BaseActivityAdapter.AdapterItemClickListener, BaseActivityView {
+public abstract class BaseFragment<T> extends Fragment implements AdapterItemClickListener, BaseView<T> {
 
     @BindView(R.id.recyclerView)
     public RecyclerView recyclerView;
     @BindView(R.id.noFilesFoundTextView)
     public TextView noFilesFoundTextView;
 
-    public BaseActivityAdapter adapter;
+    public StorageAdapter adapter;
     public String CURRENT_DIR_PATH = "";
 
     @Override

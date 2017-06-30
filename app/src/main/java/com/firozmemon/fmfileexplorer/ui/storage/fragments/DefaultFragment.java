@@ -1,4 +1,4 @@
-package com.firozmemon.fmfileexplorer.ui.fragments;
+package com.firozmemon.fmfileexplorer.ui.storage.fragments;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -15,8 +15,8 @@ import com.firozmemon.fmfileexplorer.R;
 import com.firozmemon.fmfileexplorer.helper.FileUtil;
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
-import com.firozmemon.fmfileexplorer.ui.base.BaseActivityAdapter;
-import com.firozmemon.fmfileexplorer.ui.base.BaseActivityPresenter;
+import com.firozmemon.fmfileexplorer.ui.storage.StorageAdapter;
+import com.firozmemon.fmfileexplorer.ui.storage.StoragePresenter;
 import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
 
 import java.io.File;
@@ -29,10 +29,10 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by firoz on 25/6/17.
  */
 
-public class DefaultFragment extends BaseFragment {
+public class DefaultFragment extends BaseFragment<FileModel> {
 
     private String CURRENT_DIR = "";
-    BaseActivityPresenter presenter;
+    StoragePresenter presenter;
 
     public static DefaultFragment getInstance() {
         return new DefaultFragment();
@@ -66,7 +66,7 @@ public class DefaultFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
 
         if (presenter == null) {
-            presenter = new BaseActivityPresenter(this, new StorageUtilHelper(getActivity()), AndroidSchedulers.mainThread());
+            presenter = new StoragePresenter(this, new StorageUtilHelper(getActivity()), AndroidSchedulers.mainThread());
         }
     }
 
@@ -122,7 +122,7 @@ public class DefaultFragment extends BaseFragment {
         if (!fileModelList.isEmpty()) {
             CURRENT_DIR = fileModelList.get(0).getParentDirectoryPath();
 
-            adapter = new BaseActivityAdapter(getActivity(), fileModelList);
+            adapter = new StorageAdapter(getActivity(), fileModelList);
             adapter.setItemClickListener(this);
 
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
