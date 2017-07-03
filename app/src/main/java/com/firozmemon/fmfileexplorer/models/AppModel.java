@@ -3,6 +3,8 @@ package com.firozmemon.fmfileexplorer.models;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 
+import java.io.File;
+
 /**
  * Created by firoz on 29/6/17.
  */
@@ -12,6 +14,7 @@ public class AppModel {
     Drawable appIcon;
     String appName;
     Intent launchIntent;
+    File backupFile;
 
     public String getPackageName() {
         return packageName;
@@ -43,5 +46,13 @@ public class AppModel {
 
     public void setLaunchIntent(Intent launchIntent) {
         this.launchIntent = launchIntent;
+    }
+
+    public File getBackupFile() {
+        return backupFile;
+    }
+
+    public void setBackupFile(File backupFile) {
+        this.backupFile = backupFile;
     }
 }

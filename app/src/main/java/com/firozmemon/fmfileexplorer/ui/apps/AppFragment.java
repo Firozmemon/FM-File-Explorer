@@ -2,6 +2,7 @@ package com.firozmemon.fmfileexplorer.ui.apps;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,6 +13,7 @@ import com.firozmemon.fmfileexplorer.helper.PackageManagerHelper;
 import com.firozmemon.fmfileexplorer.models.AppModel;
 import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
 
+import java.io.File;
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -80,8 +82,16 @@ public class AppFragment extends BaseFragment<AppModel> {
 
     @Override
     public void onAdapterItemLongClick(View view, int position) {
-        Snackbar.make(view, "Adapter Long Click Operation", Snackbar.LENGTH_LONG)
-                .show();
+        AppModel appModel = adapter.getItem(position);
+        File ogFile = appModel.getBackupFile();
+        if (ogFile != null) {
+            // Performing backup operation for
+            File destDir = new File(new File(Environment.getExternalStorageDirectory(), "backups"), "apps");
+            presenter.backUpApp(ogFile, destDir);
+        } else {
+            Snackbar.make(view, "Original apk file not found", Snackbar.LENGTH_LONG)
+                    .show();
+        }
     }
 
     @Override
