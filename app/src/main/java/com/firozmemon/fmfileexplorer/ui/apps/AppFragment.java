@@ -1,6 +1,7 @@
 package com.firozmemon.fmfileexplorer.ui.apps;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -22,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  * Created by firoz on 29/6/17.
  */
 
-public class AppFragment extends BaseFragment<AppModel> {
+public class AppFragment extends BaseFragment<AppModel> implements AppAdapterItemClickListener {
 
     AppFragmentPresenter presenter;
     AppAdapter adapter;
@@ -50,7 +51,7 @@ public class AppFragment extends BaseFragment<AppModel> {
 
         if (presenter == null) {
             presenter = new AppFragmentPresenter(this,
-                    PackageManagerHelper.getInstance(getActivity().getPackageManager()),
+                    PackageManagerHelper.getInstance(getActivity().getPackageManager(), getActivity()),
                     AndroidSchedulers.mainThread());
         }
     }
@@ -82,6 +83,12 @@ public class AppFragment extends BaseFragment<AppModel> {
 
     @Override
     public void onAdapterItemLongClick(View view, int position) {
+        Snackbar.make(view, "Perform Adapter Long Click Operation", Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void onAppBackupClicked(View view, int position) {
         AppModel appModel = adapter.getItem(position);
         File ogFile = appModel.getBackupFile();
         if (ogFile != null) {
@@ -92,6 +99,16 @@ public class AppFragment extends BaseFragment<AppModel> {
             Snackbar.make(view, "Original apk file not found", Snackbar.LENGTH_LONG)
                     .show();
         }
+    }
+
+    @Override
+    public void onAppUnInstallClicked(View view, int position) {
+        AppModel appModel = adapter.getItem(position);
+
+        // Performing app uninstall operation
+        Intent intent = new Intent(Intent.ACTION_DELETE);
+        intent.setData(Uri.parse("package:" + appModel.getPackageName()));
+        startActivity(intent);
     }
 
     @Override

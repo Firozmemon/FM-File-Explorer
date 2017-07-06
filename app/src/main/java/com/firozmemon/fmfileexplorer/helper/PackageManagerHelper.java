@@ -1,9 +1,12 @@
 package com.firozmemon.fmfileexplorer.helper;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.firozmemon.fmfileexplorer.models.AppModel;
@@ -24,13 +27,16 @@ import io.reactivex.Single;
 public class PackageManagerHelper {
 
     private PackageManager packageManager;
+    private Context context;
+    private float APP_ICON_SIZE_FACTOR = 100;
 
-    private PackageManagerHelper(PackageManager packageManager) {
+    private PackageManagerHelper(PackageManager packageManager, Context context) {
         this.packageManager = packageManager;
+        this.context = context;
     }
 
-    public static PackageManagerHelper getInstance(PackageManager packageManager) {
-        return new PackageManagerHelper(packageManager);
+    public static PackageManagerHelper getInstance(PackageManager packageManager, Context context) {
+        return new PackageManagerHelper(packageManager, context);
     }
 
     /**
@@ -50,6 +56,7 @@ public class PackageManagerHelper {
                     Drawable icon = null;
                     try {
                         icon = packageManager.getApplicationIcon(info.packageName);
+                        icon = scaleImage(icon, APP_ICON_SIZE_FACTOR);
                     } catch (PackageManager.NameNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -102,6 +109,7 @@ public class PackageManagerHelper {
                         Drawable icon = null;
                         try {
                             icon = packageManager.getApplicationIcon(info.packageName);
+                            icon = scaleImage(icon, APP_ICON_SIZE_FACTOR);
                         } catch (PackageManager.NameNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -165,5 +173,56 @@ public class PackageManagerHelper {
             }
             return 0;
         }
+    }
+
+    /**
+     * Used to resize app icon, such that all appIcons have same size
+     *
+     * @param image
+     * @param scaleFactor
+     * @return
+     */
+    public Drawable scaleImage(Drawable image, float scaleFactor) {
+
+        if ((image == null) || !(image instanceof BitmapDrawable)) {
+            return image;
+        }
+
+        Bitmap bitmap = ((BitmapDrawable) image).getBitmap();
+        return new BitmapDrawable(context.getResources(), getResizedBitmap(bitmap, (int) scaleFactor));
+
+    }
+
+    /**
+     * Resize Bitmap maintaining ratio
+     * @param image
+     * @param maxSize
+     * @return
+     */
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
+    /**
+     * Resize Bitmap with given size(width & height)
+     * @param image
+     * @param bitmapWidth
+     * @param bitmapHeight
+     * @return
+     */
+    public Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {
+        return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight, true);
     }
 }
