@@ -94,15 +94,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.MyViewHolder> {
                 }
             });
 
-//            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                    if (itemClickListener != null)
-//                        itemClickListener.onAdapterItemLongClick(view, getAdapterPosition());
-//                    return true;
-//                }
-//            });
-
             itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
