@@ -110,6 +110,18 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.MyViewHolder> {
                                     return true;
                                 }
                             });
+                    contextMenu.add("Properties")
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    // If activity is subscribed to adapter Click,
+                                    // notify activity about it
+                                    if (itemClickListener != null) {
+                                        itemClickListener.onAppPropertiesClicked(view, getAdapterPosition());
+                                    }
+                                    return true;
+                                }
+                            });
                     contextMenu.add("Uninstall")
                             .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                 @Override

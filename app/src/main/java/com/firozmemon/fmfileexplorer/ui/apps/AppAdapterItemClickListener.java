@@ -14,4 +14,6 @@ public interface AppAdapterItemClickListener extends AdapterItemClickListener {
 
     void onAppUnInstallClicked(View view, int position);
 
+    void onAppPropertiesClicked(View view, int position);
+
 }
