@@ -196,6 +196,19 @@ public class StoragePresenter extends BasePresenter {
                 }));
     }
 
+    public void performFileDeletion(FileModel fileModel) {
+        File file = new File(fileModel.getParentDirectoryPath(), fileModel.getName());
+        if (file.exists()) {
+            if (file.delete()) {
+                fetchCurrentStorageDirectory(fileModel.getParentDirectoryPath());
+            } else {
+                view.onError("File could not be deleted");
+            }
+        } else {
+            view.onError("File not found");
+        }
+    }
+
     private class MyCustomFileNameComparator implements Comparator<File> {
 
         @Override

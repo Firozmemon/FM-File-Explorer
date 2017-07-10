@@ -152,4 +152,11 @@ public class DefaultFragment extends BaseFragment<FileModel> {
             presenter.loadParentModelData(CURRENT_DIR);
         }
     }
+
+    @Override
+    public void onAdapterItemDeleteClicked(View view, int position) {
+        FileModel fileModel = adapter.getItem(position);
+
+        presenter.performFileDeletion(fileModel);
+    }
 }

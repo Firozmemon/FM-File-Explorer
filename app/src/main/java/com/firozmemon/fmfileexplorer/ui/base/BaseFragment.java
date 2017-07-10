@@ -70,4 +70,9 @@ public abstract class BaseFragment<T> extends Fragment implements AdapterItemCli
         }, 2000);
 
     }
+
+    @Override
+    public void onAdapterItemDeleteClicked(View view, int position) {
+        // Not doing anything here, this will be implemented in child class, if required.
+    }
 }

@@ -2,7 +2,9 @@ package com.firozmemon.fmfileexplorer.ui.storage;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -87,12 +89,22 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.MyViewHo
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
                 @Override
-                public boolean onLongClick(View view) {
-                    if (itemClickListener != null)
-                        itemClickListener.onAdapterItemLongClick(view, getAdapterPosition());
-                    return true;
+                public void onCreateContextMenu(ContextMenu contextMenu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                    contextMenu.setHeaderTitle("Select Action");
+                    contextMenu.add("Delete")
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    // If activity is subscribed to adapter Click,
+                                    // notify activity about it
+                                    if (itemClickListener != null) {
+                                        itemClickListener.onAdapterItemDeleteClicked(view, getAdapterPosition());
+                                    }
+                                    return true;
+                                }
+                            });
                 }
             });
         }
