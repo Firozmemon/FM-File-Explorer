@@ -15,6 +15,7 @@ import com.firozmemon.fmfileexplorer.R;
 import com.firozmemon.fmfileexplorer.helper.FileUtil;
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
+import com.firozmemon.fmfileexplorer.ui.base.AlertDialogCallback;
 import com.firozmemon.fmfileexplorer.ui.storage.StorageAdapter;
 import com.firozmemon.fmfileexplorer.ui.storage.StoragePresenter;
 import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
@@ -158,5 +159,20 @@ public class DefaultFragment extends BaseFragment<FileModel> {
         FileModel fileModel = adapter.getItem(position);
 
         presenter.performFileDeletion(fileModel);
+    }
+
+    @Override
+    public void onAdapterItemRenameClicked(View view, int position) {
+        final FileModel fileModel = adapter.getItem(position);    // Fetching current file
+
+        // Display Dialog to fetch new fileName
+        displayAlertDialogWithEdittext(getActivity(), fileModel.getName(), new AlertDialogCallback() {
+            @Override
+            public void alertDialogPositiveButtonClicked(Object obj) {
+                String newFileName = String.valueOf(obj);
+
+                presenter.renameFile(fileModel, newFileName);
+            }
+        });
     }
 }

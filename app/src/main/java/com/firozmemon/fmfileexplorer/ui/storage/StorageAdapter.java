@@ -93,6 +93,18 @@ public class StorageAdapter extends RecyclerView.Adapter<StorageAdapter.MyViewHo
                 @Override
                 public void onCreateContextMenu(ContextMenu contextMenu, final View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
                     contextMenu.setHeaderTitle("Select Action");
+                    contextMenu.add("Rename")
+                            .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem menuItem) {
+                                    // If activity is subscribed to adapter Click,
+                                    // notify activity about it
+                                    if (itemClickListener != null) {
+                                        itemClickListener.onAdapterItemRenameClicked(view, getAdapterPosition());
+                                    }
+                                    return true;
+                                }
+                            });
                     contextMenu.add("Delete")
                             .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                                 @Override

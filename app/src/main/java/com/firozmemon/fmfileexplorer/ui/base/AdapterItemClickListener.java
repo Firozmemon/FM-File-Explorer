@@ -8,4 +8,6 @@ public interface AdapterItemClickListener {
     void onAdapterItemLongClick(View view, int position);
 
     void onAdapterItemDeleteClicked(View view, int position);
+
+    void onAdapterItemRenameClicked(View view, int position);
 }
