@@ -51,7 +51,7 @@ public class StoragePresenter extends BasePresenter {
                                 tempFileModel.setParentDirectoryPath(filePathString);
                                 tempFileModel.setFolder(myFile.isDirectory());
                                 tempFileModel.setName(myFile.getName());
-                                tempFileModel.setFileSize(getFileSize(myFile));
+                                tempFileModel.setFileSize(myFile.isDirectory() ? "" : getFileSize(myFile));
 
                                 fileModelList.add(tempFileModel);
                             }
@@ -91,7 +91,7 @@ public class StoragePresenter extends BasePresenter {
                             tempFileModel.setName(myFile.getName());
                             tempFileModel.setFolder(myFile.isDirectory());
                             tempFileModel.setParentDirectoryPath(myFile.getParent());
-                            tempFileModel.setFileSize(getFileSize(myFile));
+                            tempFileModel.setFileSize(myFile.isDirectory() ? "" : getFileSize(myFile));
 
                             fileModelList.add(tempFileModel);
                         }
@@ -133,7 +133,7 @@ public class StoragePresenter extends BasePresenter {
                             tempFileModel.setName(myFile.getName());
                             tempFileModel.setFolder(myFile.isDirectory());
                             tempFileModel.setParentDirectoryPath(myFile.getParent());
-                            tempFileModel.setFileSize(getFileSize(myFile));
+                            tempFileModel.setFileSize(myFile.isDirectory() ? "" : getFileSize(myFile));
 
                             fileModelList.add(tempFileModel);
                         }
@@ -172,7 +172,7 @@ public class StoragePresenter extends BasePresenter {
                             tempFileModel.setName(myFile.getName());
                             tempFileModel.setFolder(myFile.isDirectory());
                             tempFileModel.setParentDirectoryPath(myFile.getParent());
-                            tempFileModel.setFileSize(getFileSize(myFile));
+                            tempFileModel.setFileSize(myFile.isDirectory() ? "" : getFileSize(myFile));
 
                             fileModelList.add(tempFileModel);
                         }
