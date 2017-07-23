@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.GridLayoutManager;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
@@ -15,9 +17,9 @@ import com.firozmemon.fmfileexplorer.helper.FileUtil;
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
 import com.firozmemon.fmfileexplorer.ui.base.AlertDialogCallback;
+import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
 import com.firozmemon.fmfileexplorer.ui.storage.StorageAdapter;
 import com.firozmemon.fmfileexplorer.ui.storage.StoragePresenter;
-import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,6 +140,14 @@ public class StorageFragment extends BaseFragment<FileModel> {
     }
 
     @Override
+    public void onSuccess(String currentDirectoryName) {
+        CURRENT_DIR = CURRENT_DIR + File.separator + currentDirectoryName;
+
+        recyclerView.setVisibility(View.GONE);
+        noFilesFoundTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onError(String strText) {
         Snackbar.make(getView(), strText, Snackbar.LENGTH_LONG)
                 .show();
@@ -164,13 +174,70 @@ public class StorageFragment extends BaseFragment<FileModel> {
         final FileModel fileModel = adapter.getItem(position);    // Fetching current file
 
         // Display Dialog to fetch new fileName
-        displayAlertDialogWithEdittext(getActivity(), fileModel.getName(), new AlertDialogCallback() {
-            @Override
-            public void alertDialogPositiveButtonClicked(Object obj) {
-                String newFileName = String.valueOf(obj);
+        displayAlertDialogWithEdittext(getActivity(),
+                "Rename",
+                "New File Name",
+                fileModel.getName(),
+                new AlertDialogCallback() {
+                    @Override
+                    public void alertDialogPositiveButtonClicked(Object obj) {
+                        String newFileName = String.valueOf(obj);
 
-                presenter.renameFile(fileModel, newFileName);
+                        presenter.renameFile(fileModel, newFileName);
+                    }
+                });
+    }
+
+
+
+    @Override
+    public void fabClicked() {
+        getView().setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu contextMenu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
+                contextMenu.setHeaderTitle("Select Action");
+                contextMenu.add("Create File")
+                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                displayAlertDialogWithEdittext(getActivity(),
+                                        "Create File",
+                                        "New File Name",
+                                        null,
+                                        new AlertDialogCallback() {
+                                            @Override
+                                            public void alertDialogPositiveButtonClicked(Object obj) {
+                                                String newFileName = String.valueOf(obj);
+
+                                                presenter.createNewFile(CURRENT_DIR, newFileName, false);
+                                            }
+                                        });
+
+                                return true;
+                            }
+                        });
+                contextMenu.add("Create Folder")
+                        .setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                displayAlertDialogWithEdittext(getActivity(),
+                                        "Create Folder",
+                                        "New Folder Name",
+                                        null,
+                                        new AlertDialogCallback() {
+                                            @Override
+                                            public void alertDialogPositiveButtonClicked(Object obj) {
+                                                String newFileName = String.valueOf(obj);
+
+                                                presenter.createNewFile(CURRENT_DIR, newFileName, true);
+                                            }
+                                        });
+
+                                return true;
+                            }
+                        });
             }
         });
+        getView().showContextMenu();    // calling context menu on single click
     }
 }

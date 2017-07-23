@@ -10,5 +10,7 @@ public interface BaseView<T> {
 
     void onSuccess(List<T> list);
 
+    void onSuccess(String currentDirectoryName);
+
     void onError(String strText);
 }

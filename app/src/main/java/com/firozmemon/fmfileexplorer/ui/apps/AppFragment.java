@@ -151,6 +151,12 @@ public class AppFragment extends BaseFragment<AppModel> implements AppAdapterIte
     }
 
     @Override
+    public void onSuccess(String currentDirectoryName) {
+        recyclerView.setVisibility(View.GONE);
+        noFilesFoundTextView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void onError(String strText) {
         Snackbar.make(getView(), strText, Snackbar.LENGTH_LONG)
                 .show();

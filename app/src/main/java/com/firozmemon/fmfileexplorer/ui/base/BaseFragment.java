@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -87,14 +89,17 @@ public abstract class BaseFragment<T> extends Fragment implements AdapterItemCli
 
     /**
      * Displaying Alert Dialog with EditText in it
-     * Currently used for Renaming file
      *
      * @param activity
-     * @param defaultString used to display inside EditText
+     * @param title used to display alertDialog title
+     * @param hint used to display hint inside EditText
+     * @param defaultText used to display inside EditText
      * @param callback
      */
     public void displayAlertDialogWithEdittext(Activity activity,
-                                               String defaultString,
+                                               String title,
+                                               String hint,
+                                               String defaultText,
                                                final AlertDialogCallback callback) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
         LayoutInflater layoutInflater = activity.getLayoutInflater();
@@ -102,16 +107,23 @@ public abstract class BaseFragment<T> extends Fragment implements AdapterItemCli
         alertDialogBuilder.setView(dialogCustomView);
 
         final EditText dialog_editText = (EditText) dialogCustomView.findViewById(R.id.dialog_editText);
-        dialog_editText.setHint("New File Name");
-        if (defaultString != null)
-            dialog_editText.setText(defaultString);
+        dialog_editText.setHint(hint);
+        if (defaultText != null)
+            dialog_editText.setText(defaultText);
 
-        alertDialogBuilder.setTitle("Rename");
+        alertDialogBuilder.setTitle(title);
 //        alertDialogBuilder.setMessage("");
         alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 if (callback != null) {
-                    callback.alertDialogPositiveButtonClicked(dialog_editText.getText().toString());
+                    // Handling textEntered here,
+                    // preventing to add code handling multiple times later
+                    String textEntered = dialog_editText.getText().toString();
+
+                    if (textEntered != null && !("".equalsIgnoreCase(textEntered)))
+                        callback.alertDialogPositiveButtonClicked(textEntered);
+                    else
+                        onError("Invalid Text Entered");
                 }
                 dialog.dismiss();
             }
@@ -125,5 +137,9 @@ public abstract class BaseFragment<T> extends Fragment implements AdapterItemCli
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    public void fabClicked() {
+        onError("Could not perform any operation");
     }
 }

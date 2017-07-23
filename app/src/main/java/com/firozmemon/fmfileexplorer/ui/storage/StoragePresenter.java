@@ -1,11 +1,13 @@
 package com.firozmemon.fmfileexplorer.ui.storage;
 
+import com.firozmemon.fmfileexplorer.helper.FileUtil;
 import com.firozmemon.fmfileexplorer.helper.StorageUtilHelper;
 import com.firozmemon.fmfileexplorer.models.FileModel;
 import com.firozmemon.fmfileexplorer.ui.base.BasePresenter;
 import com.firozmemon.fmfileexplorer.ui.base.BaseView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -65,7 +67,7 @@ public class StoragePresenter extends BasePresenter {
                         if (fileModels.size() > 0)
                             view.onSuccess(fileModels);
                         else
-                            view.onError("No Files Found");
+                            view.onSuccess("");
                     }
 
                     @Override
@@ -107,7 +109,7 @@ public class StoragePresenter extends BasePresenter {
                         if (fileModels.size() > 0)
                             view.onSuccess(fileModels);
                         else
-                            view.onError("No Files Found");
+                            view.onSuccess("");
                     }
 
                     @Override
@@ -146,7 +148,10 @@ public class StoragePresenter extends BasePresenter {
                 .subscribeWith(new DisposableSingleObserver<List<FileModel>>() {
                     @Override
                     public void onSuccess(@NonNull List<FileModel> fileModels) {
-                        view.onSuccess(fileModels);
+                        if (!fileModels.isEmpty())
+                            view.onSuccess(fileModels);
+                        else
+                            view.onSuccess(fileModel.getName());
                     }
 
                     @Override
@@ -198,7 +203,7 @@ public class StoragePresenter extends BasePresenter {
     public void performFileDeletion(FileModel fileModel) {
         File file = new File(fileModel.getParentDirectoryPath(), fileModel.getName());
         if (file.exists()) {
-            if (file.delete()) {
+            if (FileUtil.getInstance().deleteFileOrDir(file)) {
                 fetchCurrentStorageDirectory(fileModel.getParentDirectoryPath());
             } else {
                 view.onError("File could not be deleted");
@@ -226,6 +231,40 @@ public class StoragePresenter extends BasePresenter {
             }
         } else {
             view.onError("No changes made");
+        }
+    }
+
+    public void createNewFile(String currentDirectory, String newFileName, boolean isDirectory) {
+        if (currentDirectory == null) {
+            view.onError("No Directory Found");
+            return;
+        }
+
+        if (newFileName == null) {  // This should never happen, since it is already handled
+            view.onError("File Name Not Found");
+            return;
+        }
+
+        File newFile = new File(currentDirectory, newFileName);
+        if (!newFile.exists()) {
+
+            boolean fileCreated = false;
+            try {
+                if (isDirectory)
+                    fileCreated = newFile.mkdirs();
+                else
+                    fileCreated = newFile.createNewFile();  // throws IOException :|
+            } catch (IOException e) {
+                view.onError("Error: " + e.getMessage());
+                return;
+            }
+
+            if (fileCreated)
+                fetchCurrentStorageDirectory(currentDirectory);
+            else
+                view.onError("Could not create");
+        } else {
+            view.onError("File with same name already exists");
         }
     }
 
