@@ -1,12 +1,19 @@
 package com.firozmemon.fmfileexplorer.ui;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,6 +38,8 @@ import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    final int REQUEST_EXTERNAL_STORAGE = 101;
 
     @BindView(R.id.coordinatorLayout)
     CoordinatorLayout coordinatorLayout;
@@ -79,6 +88,19 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
 
+        // Adding Runtime Permission handling code
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+            } else {
+                initialSetup(savedInstanceState);
+            }
+        } else {
+            initialSetup(savedInstanceState);
+        }
+    }
+
+    private void initialSetup(Bundle savedInstanceState) {
         //Navigation Drawer setup
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,7 +123,7 @@ public class MainActivity extends AppCompatActivity
         List<String> storageList = ((FMApplication) getApplication()).getStorageDirectories();
         // Assuming a device can have max 5 storage paths
         // FIXME: have dynamic storage options w.r.t device storage availability
-        if(storageList.size() >= 5) {
+        if (storageList.size() >= 5) {
             // do nothing, display all 5 storage options
         } else {
             int storageCount = storageList.size();
@@ -138,6 +160,7 @@ public class MainActivity extends AppCompatActivity
                     navMenu.findItem(R.id.nav_sd4).setVisible(false);
                     break;
                 case 4: // this case will never be called :D
+                default:
                     navMenu.findItem(R.id.nav_sd0).setVisible(true);
                     navMenu.findItem(R.id.nav_sd1).setVisible(true);
                     navMenu.findItem(R.id.nav_sd2).setVisible(true);
@@ -268,6 +291,35 @@ public class MainActivity extends AppCompatActivity
 
             default:
                 return DefaultFragment.getInstance();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Load data
+                initialSetup(null);
+
+            } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage("This permission is important to Display Storage content")
+                            .setTitle("Important permission required");
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+                        }
+                    });
+                    builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            finish();
+                        }
+                    });
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+                }
+            }
         }
     }
 }
