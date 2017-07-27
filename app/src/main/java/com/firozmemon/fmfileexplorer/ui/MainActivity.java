@@ -25,7 +25,9 @@ import android.widget.FrameLayout;
 
 import com.firozmemon.fmfileexplorer.FMApplication;
 import com.firozmemon.fmfileexplorer.R;
+import com.firozmemon.fmfileexplorer.helper.AlertDialogHelper;
 import com.firozmemon.fmfileexplorer.ui.apps.AppFragment;
+import com.firozmemon.fmfileexplorer.ui.base.AlertDialogCallback;
 import com.firozmemon.fmfileexplorer.ui.base.BaseFragment;
 import com.firozmemon.fmfileexplorer.ui.storage.fragments.DefaultFragment;
 import com.firozmemon.fmfileexplorer.ui.storage.fragments.StorageFragment;
@@ -304,20 +306,21 @@ public class MainActivity extends AppCompatActivity
 
             } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage("This permission is important to Display Storage content")
-                            .setTitle("Important permission required");
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
-                        }
-                    });
-                    builder.setNegativeButton("Deny", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            finish();
-                        }
-                    });
-                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+                    AlertDialogHelper alertDialogHelper = new AlertDialogHelper(MainActivity.this);
+                    alertDialogHelper.displayAlertDialog("This permission is important to Display Storage content",
+                            "Important permission required", "OK", "Deny",
+                            new AlertDialogCallback() {
+                                @Override
+                                public void alertDialogPositiveButtonClicked(Object obj) {
+                                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+                                }
+
+                                @Override
+                                public void alertDialogNegativeButtonClicked(String message) {
+                                    MainActivity.this.finish();
+                                }
+                            });
+                    //ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
                 }
             }
         }

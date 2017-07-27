@@ -7,4 +7,6 @@ package com.firozmemon.fmfileexplorer.ui.base;
 public interface AlertDialogCallback {
 
     void alertDialogPositiveButtonClicked(Object obj);
+
+    void alertDialogNegativeButtonClicked(String message);
 }

@@ -185,6 +185,12 @@ public class StorageFragment extends BaseFragment<FileModel> {
 
                         presenter.renameFile(fileModel, newFileName);
                     }
+
+                    @Override
+                    public void alertDialogNegativeButtonClicked(String message) {
+                        if (message != null)
+                            onError(message);
+                    }
                 });
     }
 
@@ -211,6 +217,12 @@ public class StorageFragment extends BaseFragment<FileModel> {
 
                                                 presenter.createNewFile(CURRENT_DIR, newFileName, false);
                                             }
+
+                                            @Override
+                                            public void alertDialogNegativeButtonClicked(String message) {
+                                                if (message != null)
+                                                    onError(message);
+                                            }
                                         });
 
                                 return true;
@@ -230,6 +242,12 @@ public class StorageFragment extends BaseFragment<FileModel> {
                                                 String newFileName = String.valueOf(obj);
 
                                                 presenter.createNewFile(CURRENT_DIR, newFileName, true);
+                                            }
+
+                                            @Override
+                                            public void alertDialogNegativeButtonClicked(String message) {
+                                                if (message != null)
+                                                    onError(message);
                                             }
                                         });
 

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firozmemon.fmfileexplorer.R;
+import com.firozmemon.fmfileexplorer.helper.AlertDialogHelper;
 import com.firozmemon.fmfileexplorer.ui.storage.StorageAdapter;
 
 import butterknife.BindView;
@@ -101,42 +102,9 @@ public abstract class BaseFragment<T> extends Fragment implements AdapterItemCli
                                                String hint,
                                                String defaultText,
                                                final AlertDialogCallback callback) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(activity);
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        final View dialogCustomView = layoutInflater.inflate(R.layout.alertdialog_edittext, null);
-        alertDialogBuilder.setView(dialogCustomView);
-
-        final EditText dialog_editText = (EditText) dialogCustomView.findViewById(R.id.dialog_editText);
-        dialog_editText.setHint(hint);
-        if (defaultText != null)
-            dialog_editText.setText(defaultText);
-
-        alertDialogBuilder.setTitle(title);
-//        alertDialogBuilder.setMessage("");
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                if (callback != null) {
-                    // Handling textEntered here,
-                    // preventing to add code handling multiple times later
-                    String textEntered = dialog_editText.getText().toString();
-
-                    if (textEntered != null && !("".equalsIgnoreCase(textEntered)))
-                        callback.alertDialogPositiveButtonClicked(textEntered);
-                    else
-                        onError("Invalid Text Entered");
-                }
-                dialog.dismiss();
-            }
-        });
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Do nothing
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
+        
+        AlertDialogHelper alertDialogHelper = new AlertDialogHelper(activity);
+        alertDialogHelper.displayAlertDialogWithEdittext(title, hint, defaultText, callback);
     }
 
     public void fabClicked() {
