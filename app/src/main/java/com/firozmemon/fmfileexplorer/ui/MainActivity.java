@@ -62,8 +62,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         fragment.fabClicked();
-//        Snackbar.make(coordinatorLayout, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show();
     }
 
     // index to identify current nav menu item

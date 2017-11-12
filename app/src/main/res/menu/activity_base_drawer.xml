@@ -4,31 +4,31 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_sd0"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_sd_card"
             android:title="SD Card 0" />
         <item
             android:id="@+id/nav_sd1"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_sd_card"
             android:title="SD Card 1" />
         <item
             android:id="@+id/nav_sd2"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_sd_card"
             android:title="SD Card 2" />
         <item
             android:id="@+id/nav_sd3"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_sd_card"
             android:title="SD Card 3" />
         <item
             android:id="@+id/nav_sd4"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_sd_card"
             android:title="SD Card 4" />
         <item
             android:id="@+id/nav_root"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_root"
             android:title="Root" />
         <item
             android:id="@+id/nav_apps"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_app"
             android:title="Apps" />
     </group>
 
